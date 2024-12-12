@@ -1,0 +1,10 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "lib:WGSLTr"
+
+    - path: "app/Main.hs"
+      component: "WGSLTr:exe:WGSLTr"
+
+    - path: "test"
+      component: "WGSLTr:test:WGSLTr-test"

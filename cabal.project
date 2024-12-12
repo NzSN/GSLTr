@@ -1,0 +1,23 @@
+packages:
+    *.cabal
+
+source-repository-package
+    type: git
+    location: https://github.com/NzSN/semantic.git
+    tag: eb5d3b341f36b18be39c4efa91f02a5a55ab31e4
+    subdir: semantic
+    subdir: semantic-analysis
+    subdir: semantic-ast
+    subdir: semantic-codeql
+    subdir: semantic-go
+    subdir: semantic-java
+    subdir: semantic-json
+    subdir: semantic-parse
+    subdir: semantic-php
+    subdir: semantic-proto
+    subdir: semantic-python
+    subdir: semantic-ruby
+    subdir: semantic-scope-graph
+    subdir: semantic-tags
+    subdir: semantic-tsx
+    subdir: semantic-typescript
