@@ -1,0 +1,12 @@
+
+./app/Main.hs,37
+module Main Main0,1
+main main4,5
+
+./src/AstGen.hs,49
+module AstGen AstGen0,1
+someFunc someFunc3,4
+
+./test/Main.hs,37
+module Main Main0,1
+main main2,3

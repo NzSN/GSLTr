@@ -1,0 +1,7 @@
+packages:
+    *.cabal
+    ../haskell-tree-sitter/tree-sitter
+    ../haskell-tree-sitter/tree-sitter-wgsl
+    AstGen
+
+tests: true

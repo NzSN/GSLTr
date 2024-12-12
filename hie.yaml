@@ -1,0 +1,19 @@
+cradle:
+  cabal:
+    - path: "AstGen/src"
+      component: "lib:AstGen"
+
+    - path: "AstGen/app/Main.hs"
+      component: "AstGen:exe:AstGen"
+
+    - path: "AstGen/test"
+      component: "AstGen:test:AstGen-test"
+
+    - path: "src"
+      component: "lib:GSLTr"
+
+    - path: "app/Main.hs"
+      component: "GSLTr:exe:GSLTr"
+
+    - path: "test"
+      component: "GSLTr:test:GSLTr-test"
