@@ -1,0 +1,55 @@
+cabal-version:      3.4
+name:               AstGen
+version:            0.1.0.0
+-- synopsis:
+-- description:
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             NzSN
+maintainer:         nzsn0101@gmail.com
+-- copyright:
+category:           Language
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+    exposed-modules:  AST.Parse,
+                      AST.AST,
+    -- other-modules:
+    -- other-extensions:
+    build-depends:    base ^>=4.20.0.0,
+                      aeson >=2.2.3.0,
+                      tree-sitter >= 0.9.0.3,
+                      bytestring >= 0.12.1.0,
+
+    hs-source-dirs:   src
+    default-language: GHC2024
+
+executable AstGen
+    import:           warnings
+    main-is:          Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        base ^>=4.20.0.0,
+        AstGen,
+
+    hs-source-dirs:   app
+    default-language: GHC2024
+
+test-suite AstGen-test
+    import:           warnings
+    default-language: GHC2024
+    -- other-modules:
+    -- other-extensions:
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:
+        base ^>=4.20.0.0,
+        AstGen
