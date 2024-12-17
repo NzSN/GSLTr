@@ -18,7 +18,8 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  AST.Parse,
+    exposed-modules:  AstGen,
+                      AST.Parse,
                       AST.AST,
     -- other-modules:
     -- other-extensions:
