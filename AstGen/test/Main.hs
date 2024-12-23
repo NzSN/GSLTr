@@ -28,7 +28,10 @@ internalNode :: Test
 internalNode =
   let v = code_gen (pack source)
   in TestCase (assert $ not $ isNothing $ (trace (show v) v))
-  where source = "[{ \"type\": \"A\", \"named\": true, \"children\": { \"types\": [ { \"type\": \"B\", \"named\": true } ] }}]"
+  where source = "[{ \"type\": \"A\", \"named\": true, \n\
+                 \   \"children\": { \"types\": [\n\
+                 \ { \"type\": \"B\", \"named\": true },  \n\
+                 \ { \"type\": \"C\", \"named\": true }] }}]"
 
 tests :: Test
 tests = TestList [TestLabel "NamedLeaf" namedLeaf,

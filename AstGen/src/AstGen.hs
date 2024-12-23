@@ -3,12 +3,13 @@
 
 module AstGen (code_gen) where
 
-import Debug.Trace (trace)
-
+import Data.List (uncons)
 import Data.Aeson (decode, Object, (.:), (.:?))
 import Data.Aeson.Types (parseMaybe)
 import Data.ByteString.Lazy.Internal (ByteString)
-import Data.Maybe (catMaybes, fromJust, isJust)
+import qualified Data.ByteString.Lazy as LB
+import qualified Data.ByteString.Lazy.Char8 as LB_Char
+import Data.Maybe (fromJust)
 
 type Rule     = Object
 type NodeType = String
@@ -22,9 +23,21 @@ instance Monoid ASTLiteral where
   mempty = ASTLiteral ""
   mconcat = foldr (<>) mempty
 
+code_gen_to_path :: FilePath -> FilePath -> IO ()
+code_gen_to_path ipath opath = do
+  literal_maybe <- code_gen_from_path ipath
+  case literal_maybe of
+    Nothing                   -> error_report
+    Just ASTEmpty             -> error_report
+    Just (ASTLiteral content) -> LB.writeFile opath (LB_Char.pack content)
+
+  where error_report = putStrLn "Failed to generate strongly AST-Type "
+
+code_gen_from_path :: FilePath -> IO (Maybe ASTLiteral)
+code_gen_from_path path = LB.readFile path >>= \bs -> return (code_gen bs)
 
 code_gen :: ByteString -> Maybe ASTLiteral
-code_gen bs = generate (decode bs :: Maybe [Rule])
+code_gen bs = prologue <> generate (decode bs :: Maybe [Rule])
   where
     generate :: Maybe [Rule] -> Maybe ASTLiteral
     generate Nothing      = Just $ ASTLiteral ""
@@ -37,7 +50,7 @@ code_gen bs = generate (decode bs :: Maybe [Rule])
                 anonymous <- obj .: "named"
                 subnodes <- obj .:? "children"
 
-                case ((trace ("Sub:" ++ show subnodes) subnodes) :: Maybe Rule) of
+                case subnodes :: Maybe Rule of
                   -- Leaf node
                   Nothing -> return $ generate_leaf t anonymous
                   -- Internal node
@@ -59,7 +72,7 @@ code_gen bs = generate (decode bs :: Maybe [Rule])
         Nothing              -> ASTEmpty
         Just (ASTEmpty)      -> ASTEmpty
         Just (ASTLiteral v') -> ASTLiteral $
-          "data " ++ nt ++ " = " ++ "{ ann: a, extraChildren:" ++ v' ++ " }"
+          "data " ++ nt ++ " = " ++ "{ ann: a, extraChildren: " ++ v' ++ " }"
 
     anonymousIdent :: NodeType -> String
     anonymousIdent nt
@@ -73,5 +86,23 @@ code_gen bs = generate (decode bs :: Maybe [Rule])
 
 
     generate_children :: [Rule] -> ASTLiteral
-    generate_children r = do
-      foldl' (\s r -> ASTLiteral "AA") (ASTLiteral "") r
+    generate_children r =
+      let cs = children r
+      in case uncons cs of
+        Nothing -> ASTEmpty
+        Just (first_child, tail_children) -> ASTLiteral $ "(GHC.Base.NonEmpty (" ++
+         first_child ++
+         (foldl' (\_ c -> " :+: " ++ c) "" tail_children) ++
+         "))"
+      where
+        children :: [Rule] -> [String]
+        children r'' = foldl' (\s r' -> s ++ [child_rule r']) [] r''
+
+        child_rule :: Rule -> String
+        child_rule r' = fromJust $ flip parseMaybe r' $ \obj -> obj .: "type"
+
+    prologue :: Maybe ASTLiteral
+    prologue = Just $
+      ASTLiteral "import qualified GHC.Base\n\
+                 \import qualified GHC.Generics\n\
+                 \import AST.Token (Token)\n"
