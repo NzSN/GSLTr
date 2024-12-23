@@ -3,10 +3,9 @@
 
 module AstGen (code_gen) where
 
-import Data.List (uncons)
+import Data.List as Li (uncons)
 import Data.Aeson (decode, Object, (.:), (.:?))
 import Data.Aeson.Types (parseMaybe)
-import Data.ByteString.Lazy.Internal (ByteString)
 import qualified Data.ByteString.Lazy as LB
 import qualified Data.ByteString.Lazy.Char8 as LB_Char
 import Data.Maybe (fromJust)
@@ -36,7 +35,7 @@ code_gen_to_path ipath opath = do
 code_gen_from_path :: FilePath -> IO (Maybe ASTLiteral)
 code_gen_from_path path = LB.readFile path >>= \bs -> return (code_gen bs)
 
-code_gen :: ByteString -> Maybe ASTLiteral
+code_gen :: LB.ByteString -> Maybe ASTLiteral
 code_gen bs = prologue <> generate (decode bs :: Maybe [Rule])
   where
     generate :: Maybe [Rule] -> Maybe ASTLiteral
