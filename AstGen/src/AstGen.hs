@@ -87,7 +87,6 @@ code_gen bs = prologue <> generate (decode bs :: Maybe [Rule])
       | nt == "~"  = "Tilde"
       | otherwise  = nt
 
-
     generate_children :: [Rule] -> ASTLiteral
     generate_children r =
       let cs = children r
