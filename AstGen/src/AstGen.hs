@@ -1,7 +1,11 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module AstGen (code_gen) where
+module AstGen (
+  code_gen,
+  code_gen_from_path,
+  code_gen_to_path,
+) where
 
 import Data.List as Li (uncons)
 import Data.Aeson (decode, Object, (.:), (.:?))

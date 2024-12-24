@@ -38,6 +38,7 @@ executable AstGen
     -- other-extensions:
     build-depends:
         base ^>=4.20.0.0,
+        parseargs >=0.2.0.9,
         AstGen,
 
     hs-source-dirs:   app
